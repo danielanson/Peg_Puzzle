@@ -32,9 +32,10 @@ typedef struct {
 //  things must apply:
 //
 //  1)  the center peg must be taken or occupied.
-//  2)  the peg being accounted for must not be out of the bounds of the array,
-//  3)  there must be an empty peg slot at one end of the three provided its
-//      counterpart is not out of bounds of the array.
+//  2)  the peg starting a jump must not be out of the bounds of the Puzzle.
+//  3)  there must be an empty peg slot to jump into directly across from the
+//      jumping peg jumping over the center peg and the destination must not
+//      be outside the bounds of the Puzzle.
 //
 //  In the triangle, it looks like this, C being the center peg, as an example,
 //  using T for taken or an occupied peg.
@@ -47,7 +48,7 @@ typedef struct {
 //
 //  1 | 2
 //  ----------
-//  0 | T | 3
+//  0 | C | 3
 //  ----------
 //    | 5 | 4
 //
@@ -62,7 +63,7 @@ typedef struct {
 //
 //
 //  When a jump is made from a line of 3 (1 horizontal axis, 1 vertical axis,
-//  and 1 diagonal access) one end and the center must be occupied.  Each of
+//  and 1 diagonal axis), one end and the center must be occupied.  Each of
 //  these series of jumps will result in 2 being empty and one being occupied.
 //  The pairs are:
 //
