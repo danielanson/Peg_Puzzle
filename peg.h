@@ -74,7 +74,7 @@ typedef struct {
 //  and the total number of possible jumps.
 
 typedef struct {
-   int jump[SIZE+1]
+   int jump[SIZE+1];
    int possible_jumps;
 } Jump;
 
