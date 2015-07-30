@@ -2,8 +2,8 @@
  * peg.h
  */
 
-//  Because the triangle goes from 1 at the top to 5 at the bottom, the
-//  triangle can be represented as a 5 X 5 array.  It would be possible
+//  Because the triangle goes from 1 peg at the top to 5 pegs at the bottom,
+//  the triangle can be represented as a 5 X 5 array.  It would be possible
 //  to represent the triangle as 5X9 or 9X9 array but it is easily 
 //  represented as a partially filled 5X5 array.
 
