@@ -17,19 +17,19 @@ Puzzle build_triangle(int empty_peg) {
       }
    }
    switch(p.empty_peg) {
-      case 1:
+      case 0:
          p.triangle[3][1] = 0;
 	 break;
-      case 2:
+      case 1:
          p.triangle[4][0] = 0;
 	 break;
-      case 3:
+      case 2:
          p.triangle[4][1] = 0;
 	 break;
-      case 4:
+      case 3:
          p.triangle[4][2] = 0;
 	 break;
-      case 5:
+      case 4:
          p.triangle[4][3] = 0;
 	 break;
       default:
