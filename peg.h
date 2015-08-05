@@ -8,6 +8,7 @@
 //  represented as a partially filled 5X5 array.
 
 #define SIZE 5
+#define JUMPSIZE 6
 
 /* DATA STRUCTURES */
 
@@ -75,6 +76,7 @@ typedef struct {
 //  and the total number of possible jumps.
 
 typedef struct {
+   int xy[2];
    int jump[SIZE+1];
    int possible_jumps;
 } Jump;
@@ -94,8 +96,25 @@ void print_triangle(Puzzle p);
 //  builds a Puzzle struct with a parameter for the empty peg.  The empty pegs
 //  are in fixed positins.
 
-Puzzle build_triangle(int empty_peg);
+Puzzle build_Puzzle(int empty_peg);
 
 //  This function merely counts the non-empty pegs in a Puzzle.
 
 int peg_count(Puzzle p);
+
+// This function takes in and [x,y] coordinate and counts the jumps around it.
+// It will be using the methodology described above.  There will be three
+// possible answers:
+//
+// 1)  1:  A jump is possible
+// 2)  0:  A jump is not possible
+// 3)  -1:  Out of Bounds
+
+Jump find_jumps_for_peg(Puzzle p, int row, int col);
+
+void print_Jump(Jump j);
+
+
+
+
+
