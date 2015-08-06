@@ -8,6 +8,7 @@
 Puzzle build_Puzzle(int empty_peg) {
    Puzzle p;
    p.empty_peg = empty_peg;
+   p.all_possible_jumps = 0;
 
    // Initialize all slots in the array to -1
    for(int row=0; row<SIZE; row++) {
@@ -24,6 +25,7 @@ Puzzle build_Puzzle(int empty_peg) {
 	 p.triangle[row][column] = 1;
       }
    }
+
    switch(p.empty_peg) {
       case 0:
          p.triangle[3][1] = 0;
@@ -50,17 +52,21 @@ void print_triangle(Puzzle p) {
    printf("\n");
    printf("     %d\n\n", p.triangle[0][0]);
    printf("    %d %d\n\n", p.triangle[1][0], p.triangle[1][1]);
-   printf("   %d %d %d\n\n", p.triangle[2][0], p.triangle[2][1], p.triangle[2][2]);
+   printf("   %d %d %d\n\n", p.triangle[2][0], p.triangle[2][1], 
+		             p.triangle[2][2]);
    printf("  %d %d %d %d\n\n", p.triangle[3][0], p.triangle[3][1], 
 		               p.triangle[3][2], p.triangle[3][3]);
-   printf(" %d %d %d %d %d\n\n", p.triangle[4][0], p.triangle[4][1], p.triangle[4][2],
-		                 p.triangle[4][3], p.triangle[4][4]);
+   printf(" %d %d %d %d %d\n\n", p.triangle[4][0], p.triangle[4][1], 
+		                 p.triangle[4][2], p.triangle[4][3], 
+				 p.triangle[4][4]);
    
    printf("Peg count is %d\n", peg_count(p));
-   printf("Starting empty peg was %d\n\n", p.empty_peg);
+   printf("Starting empty peg was %d\n", p.empty_peg);
+   printf("Total possible jumps:  %d\n\n", p.all_possible_jumps);
 }
 
 int peg_count(Puzzle p) {
+
    int peg_count = 0;
    for (int row=0; row<SIZE; row++) {
       if (p.triangle[row][row] == 1) {
@@ -75,6 +81,25 @@ int peg_count(Puzzle p) {
       }
    }
    return peg_count;
+}
+
+void find_jumps_for_puzzle(Puzzle *p) {
+
+   int count = 0;
+   for(int row=0; row<SIZE; row++) {
+      Jump j = find_jumps_for_peg(*p, row, row);
+      p->jumps[count] = j;
+      p->all_possible_jumps += j.possible_jumps;
+      count ++;
+      int column = row;
+      while(column != 0) {
+	 column --;
+         Jump k = find_jumps_for_peg(*p, row, column);
+	 p->jumps[count] = k;
+         p->all_possible_jumps += k.possible_jumps;
+	 count ++;
+      }
+   }
 }
 
 Jump find_jumps_for_peg(Puzzle p, int row, int col) {
@@ -139,7 +164,7 @@ Jump find_jumps_for_peg(Puzzle p, int row, int col) {
    }
 
    // Now we determine jumps from positions 0, 1, and 2
-   for (int i=0; i<SIZE-1; i++) {
+   for (int i=0; i<SIZE-2; i++) {
       ptr = &j.jump[i];
       if ((pegs[i] == -1) || (pegs[i+3] == -1)) {
          *ptr = 0;
@@ -171,10 +196,15 @@ void print_Jump(Jump j) {
    printf("Coordinates:  %d,%d\n", j.xy[0], j.xy[1]);
    printf("Possible Jumps:  %d\n", j.possible_jumps);
    printf("Jumps:  ");
-   for (ptr = &j.jump[0]; ptr < &j.jump[JUMPSIZE]; ptr ++) {
+   for (ptr=&j.jump[0]; ptr<&j.jump[JUMPSIZE]; ptr++) {
       printf("%d", *ptr);
    }
    printf("\n\n");
 }
 
-
+void print_Jumps(Puzzle p) {
+   Jump *jptr;
+   for(jptr = &p.jumps[0]; jptr<&p.jumps[PEGS]; jptr++) {
+      print_Jump(*jptr);
+   }
+}

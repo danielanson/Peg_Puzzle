@@ -7,8 +7,10 @@
 //  to represent the triangle as 5X9 or 9X9 array but it is easily 
 //  represented as a partially filled 5X5 array.
 
-#define SIZE 5
+#define COORDINATES 2
 #define JUMPSIZE 6
+#define PEGS 15
+#define SIZE 5
 
 /* DATA STRUCTURES */
 
@@ -24,8 +26,16 @@
 //  1 2 3 4 T        1 2 3 4 T
 
 typedef struct {
+   int xy[COORDINATES];
+   int jump[JUMPSIZE];
+   int possible_jumps;
+} Jump;
+
+typedef struct {
    int triangle[SIZE][SIZE];
    int empty_peg;
+   int all_possible_jumps;
+   Jump jumps[PEGS];
 } Puzzle;
 
 //  This struct has an array of 6 elements and a counter for possible jumps.
@@ -75,12 +85,6 @@ typedef struct {
 //  The array will simply hold whether a jump is possible from positions 0-5
 //  and the total number of possible jumps.
 
-typedef struct {
-   int xy[2];
-   int jump[SIZE+1];
-   int possible_jumps;
-} Jump;
-
 /*
  * FUNCTIONS
  */
@@ -111,10 +115,7 @@ int peg_count(Puzzle p);
 // 3)  -1:  Out of Bounds
 
 Jump find_jumps_for_peg(Puzzle p, int row, int col);
-
+void find_jumps_for_puzzle(Puzzle *p);
 void print_Jump(Jump j);
-
-
-
-
+void print_Jumps(Puzzle p);
 
