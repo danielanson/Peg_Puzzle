@@ -5,7 +5,10 @@
  * pegfunc.c
  */
 
+// Builds the initial Puzzle struct but doesn't fill in the Jump array.  I
+// wanted that to be a function with a pointer so I can recurse a bit easier.
 Puzzle build_Puzzle(int empty_peg) {
+
    Puzzle p;
    p.empty_peg = empty_peg;
    p.all_possible_jumps = 0;
@@ -17,6 +20,8 @@ Puzzle build_Puzzle(int empty_peg) {
       }
    }
 
+   // Here's where we fill in the triangle, This loop pair traverses the
+   // triangle pretty cleanly so you'll see it a few more times in the code.
    for (int row=0; row<SIZE; row++) {
       p.triangle[row][row] = 1;
       int column = row;
@@ -26,6 +31,7 @@ Puzzle build_Puzzle(int empty_peg) {
       }
    }
 
+   // Depending on the starting hole, 5 separate cases.
    switch(p.empty_peg) {
       case 0:
          p.triangle[3][1] = 0;
@@ -49,6 +55,7 @@ Puzzle build_Puzzle(int empty_peg) {
 }
 
 void print_triangle(Puzzle p) {
+
    printf("\n");
    printf("     %d\n\n", p.triangle[0][0]);
    printf("    %d %d\n\n", p.triangle[1][0], p.triangle[1][1]);
@@ -83,6 +90,8 @@ int peg_count(Puzzle p) {
    return peg_count;
 }
 
+// Wanted to keep this function out of the build_Puzzle function because we
+// will be using this function for recursion.
 void find_jumps_for_puzzle(Puzzle *p) {
 
    int count = 0;
