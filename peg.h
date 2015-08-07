@@ -8,9 +8,11 @@
 //  represented as a partially filled 5X5 array.
 
 #define COORDINATES 2
+#define FALSE 0 
 #define JUMPSIZE 6
 #define PEGS 15
 #define SIZE 5
+#define TRUE 1
 
 /* DATA STRUCTURES */
 
@@ -29,6 +31,7 @@ typedef struct {
    int xy[COORDINATES];
    int jump[JUMPSIZE];
    int possible_jumps;
+   int is_empty;
 } Jump;
 
 typedef struct {
@@ -92,19 +95,17 @@ typedef struct {
 //  print_triangle
 //  takes in a Puzzle struct and prints the triangle in a pseudo-triangular
 //  readible form as opposed to the 5X5 array.
-
 void print_triangle(Puzzle p);
 
 //  As discussed previously, there are only 5 positions in which an empty
 //  peg can reside.  All others represent 120 degree rotations.  This function
 //  builds a Puzzle struct with a parameter for the empty peg.  The empty pegs
 //  are in fixed positins.
-
 Puzzle build_Puzzle(int empty_peg);
 
 //  This function merely counts the non-empty pegs in a Puzzle.
-
 int peg_count(Puzzle p);
+
 
 // This function takes in and [x,y] coordinate and counts the jumps around it.
 // It will be using the methodology described above.  There will be three
@@ -113,9 +114,22 @@ int peg_count(Puzzle p);
 // 1)  1:  A jump is possible
 // 2)  0:  A jump is not possible
 // 3)  -1:  Out of Bounds
-
 Jump find_jumps_for_peg(Puzzle p, int row, int col);
+
+// This function takes in a Puzzle and finds all the jumps on the
+// board.  I use a pointer so I can acceee the memory and fill in the 
+// Jump array inside the Puzzle struct.
 void find_jumps_for_puzzle(Puzzle *p);
+
+// This is a function that makes a jump and alters the triangle.  Again, we 
+// use a Puzzle pointer to access the memory.
+void make_jump(Puzzle *p, Jump *j, int position);
+
+// Print a single jump struct
 void print_Jump(Jump j);
+
+// Prints a Puzzle's worth od Jump structs.
 void print_Jumps(Puzzle p);
+
+// the meat of the game, RECURSION!
 

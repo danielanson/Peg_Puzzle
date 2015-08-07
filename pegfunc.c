@@ -11,7 +11,6 @@ Puzzle build_Puzzle(int empty_peg) {
 
    Puzzle p;
    p.empty_peg = empty_peg;
-   p.all_possible_jumps = 0;
 
    // Initialize all slots in the array to -1
    for(int row=0; row<SIZE; row++) {
@@ -94,6 +93,7 @@ int peg_count(Puzzle p) {
 // will be using this function for recursion.
 void find_jumps_for_puzzle(Puzzle *p) {
 
+   p->all_possible_jumps = 0;
    int count = 0;
    for(int row=0; row<SIZE; row++) {
       Jump j = find_jumps_for_peg(*p, row, row);
@@ -124,14 +124,19 @@ Jump find_jumps_for_peg(Puzzle p, int row, int col) {
       *ptr = 0;
    }
    j.possible_jumps = 0;
+   j.is_empty = FALSE;
 
    // The points of the triangle can never be jumped so instantly return
-   // the empty Jump struct.
+   // the empty Jump struct.  It can howeve be empty so check for that.
    if ((row==0 && col==0) || (row==4 && col==0) || (row==4 && col==4)) {
+      if (p.triangle[row][col] == 0) {
+         j.is_empty = TRUE;
+      }
       return j;
    }
    // If the [x,y] peg slot is empty, we can't make a jump so return.
    if (p.triangle[row][col] == 0) {
+      j.is_empty = TRUE;
       return j;
    }
    
@@ -201,9 +206,11 @@ Jump find_jumps_for_peg(Puzzle p, int row, int col) {
 }
 
 void print_Jump(Jump j) {
+
    int *ptr;
    printf("Coordinates:  %d,%d\n", j.xy[0], j.xy[1]);
    printf("Possible Jumps:  %d\n", j.possible_jumps);
+   printf("is_empty:  %d\n", j.is_empty);
    printf("Jumps:  ");
    for (ptr=&j.jump[0]; ptr<&j.jump[JUMPSIZE]; ptr++) {
       printf("%d", *ptr);
@@ -212,8 +219,44 @@ void print_Jump(Jump j) {
 }
 
 void print_Jumps(Puzzle p) {
+
    Jump *jptr;
    for(jptr = &p.jumps[0]; jptr<&p.jumps[PEGS]; jptr++) {
       print_Jump(*jptr);
    }
+}
+
+void make_jump(Puzzle *p, Jump *j, int position) {
+
+   int row=j->xy[0], col=j->xy[1];
+
+   // takes care of emptying the middle peg
+   p->triangle[row][col] = 0;
+  
+   switch(position) {
+      case 0:
+         p->triangle[row][col-1]=0;         
+         p->triangle[row][col+1]=1;
+         break;
+      case 1:
+         p->triangle[row-1][col-1]=0;
+         p->triangle[row+1][col+1]=1;
+         break;
+      case 2:
+         p->triangle[row-1][col]=0;
+         p->triangle[row+1][col]=1;
+         break;
+      case 3:
+         p->triangle[row][col+1]=0;
+         p->triangle[row][col-1]=1;         
+         break;
+      case 4:
+	 p->triangle[row+1][col+1]=0;
+         p->triangle[row-1][col-1]=1;
+         break;
+      case 5:
+         p->triangle[row+1][col]=0;
+         p->triangle[row-1][col]=1;
+         break;
+      }
 }
