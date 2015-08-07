@@ -229,6 +229,9 @@ void print_Jumps(Puzzle p) {
 void make_jump(Puzzle *p, Jump *j, int position) {
 
    int row=j->xy[0], col=j->xy[1];
+   if(j->is_empty==TRUE) {
+      return;
+   }
 
    // takes care of emptying the middle peg
    p->triangle[row][col] = 0;
