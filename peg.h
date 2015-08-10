@@ -39,6 +39,7 @@ typedef struct {
    int empty_peg;
    int all_possible_jumps;
    Jump jumps[PEGS];
+   int peg_count;
 } Puzzle;
 
 //  This struct has an array of 6 elements and a counter for possible jumps.
@@ -116,7 +117,7 @@ int peg_count(Puzzle p);
 // 3)  -1:  Out of Bounds
 Jump find_jumps_for_peg(Puzzle p, int row, int col);
 
-// This function takes in a Puzzle and finds all the jumps on the
+// This function takes in a Puzzle pointer and finds all the jumps on the
 // board.  I use a pointer so I can acceee the memory and fill in the 
 // Jump array inside the Puzzle struct.
 void find_jumps_for_puzzle(Puzzle *p);
@@ -132,4 +133,4 @@ void print_Jump(Jump j);
 void print_Jumps(Puzzle p);
 
 // the meat of the game, RECURSION!
-
+void recurse(Puzzle *p);

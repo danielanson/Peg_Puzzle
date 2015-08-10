@@ -50,6 +50,7 @@ Puzzle build_Puzzle(int empty_peg) {
       default:
 	 break;
    }
+   p.peg_count=peg_count(p);
    return p;
 }
 
@@ -66,7 +67,7 @@ void print_triangle(Puzzle p) {
 		                 p.triangle[4][2], p.triangle[4][3], 
 				 p.triangle[4][4]);
    
-   printf("Peg count is %d\n", peg_count(p));
+   printf("Peg count is %d\n", p.peg_count);
    printf("Starting empty peg was %d\n", p.empty_peg);
    printf("Total possible jumps:  %d\n\n", p.all_possible_jumps);
 }
@@ -111,10 +112,11 @@ void find_jumps_for_puzzle(Puzzle *p) {
    }
 }
 
+// Finds the jump for a single peg.
 Jump find_jumps_for_peg(Puzzle p, int row, int col) {
 
    Jump j;
-   int pegs[] = {0, 0, 0, 0, 0, 0};
+   int positions[] = {0, 0, 0, 0, 0, 0};
    int temp_row = 0, temp_col = 0, *ptr;
 
    // Initialize the Jump struct
@@ -127,13 +129,14 @@ Jump find_jumps_for_peg(Puzzle p, int row, int col) {
    j.is_empty = FALSE;
 
    // The points of the triangle can never be jumped so instantly return
-   // the empty Jump struct.  It can howeve be empty so check for that.
+   // the empty Jump struct.  It can however be empty so check for that.
    if ((row==0 && col==0) || (row==4 && col==0) || (row==4 && col==4)) {
       if (p.triangle[row][col] == 0) {
          j.is_empty = TRUE;
       }
       return j;
    }
+
    // If the [x,y] peg slot is empty, we can't make a jump so return.
    if (p.triangle[row][col] == 0) {
       j.is_empty = TRUE;
@@ -141,7 +144,7 @@ Jump find_jumps_for_peg(Puzzle p, int row, int col) {
    }
    
    for (int count=0; count<JUMPSIZE; count++) {
-      ptr = &pegs[count];
+      ptr = &positions[count];
       switch(count) {
          case 0:
             temp_row = row;
@@ -168,6 +171,7 @@ Jump find_jumps_for_peg(Puzzle p, int row, int col) {
             temp_col = col;
             break;
       }
+
       // Each of the 6 positions are marked -1, 0, or 1.  Out of bounds,
       // empty, or occupied respectively.
       if ((temp_row<0) || (temp_col<0) || (temp_row>=SIZE) || (temp_col>=SIZE)) {
@@ -180,10 +184,10 @@ Jump find_jumps_for_peg(Puzzle p, int row, int col) {
    // Now we determine jumps from positions 0, 1, and 2
    for (int i=0; i<SIZE-2; i++) {
       ptr = &j.jump[i];
-      if ((pegs[i] == -1) || (pegs[i+3] == -1)) {
+      if ((positions[i] == -1) || (positions[i+3] == -1)) {
          *ptr = 0;
       }
-      if ((pegs[i] == 1) && (pegs[i+3] == 0)) {
+      if ((positions[i] == 1) && (positions[i+3] == 0)) {
          *ptr = 1;
 	 j.possible_jumps ++;
       }
@@ -193,10 +197,10 @@ Jump find_jumps_for_peg(Puzzle p, int row, int col) {
    // Now we determine jumps from positions 3, 4, and 5
    for (int i=SIZE; i>=3; i--) {
       ptr = &j.jump[i];
-      if ((pegs[i] == -1) || (pegs[i-3] == -1)) {
+      if ((positions[i] == -1) || (positions[i-3] == -1)) {
          *ptr = 0;
       }
-      if ((pegs[i] == 1) && (pegs[i-3] == 0)) {
+      if ((positions[i] == 1) && (positions[i-3] == 0)) {
          *ptr = 1;
 	 j.possible_jumps ++;
       }
@@ -228,14 +232,19 @@ void print_Jumps(Puzzle p) {
 
 void make_jump(Puzzle *p, Jump *j, int position) {
 
+   // peg being jumped from j-xy[]
    int row=j->xy[0], col=j->xy[1];
+   
    if(j->is_empty==TRUE) {
       return;
    }
 
    // takes care of emptying the middle peg
    p->triangle[row][col] = 0;
-  
+
+   // Clears one and fills the other in combination to define a jump.  Middle
+   // peg cleared, and position is emptied.  Complimentary peg to position is
+   // then filled.
    switch(position) {
       case 0:
          p->triangle[row][col-1]=0;         
@@ -261,5 +270,27 @@ void make_jump(Puzzle *p, Jump *j, int position) {
          p->triangle[row+1][col]=0;
          p->triangle[row-1][col]=1;
          break;
-      }
+   }
+   p->peg_count--;
 }
+
+void recurse(Puzzle *p) {
+	 
+   for(Jump *jptr=&p->jumps[0]; jptr<&p->jumps[PEGS]; jptr++) {
+      for(int i=0; i<JUMPSIZE; i++) {
+         if(jptr->jump[i]==1) {
+	    if(p->peg_count == 1) {
+	       printf("Solution Found!!!!!");
+	       print_triangle(*p);
+	    } else {
+               make_jump(p, jptr, i);
+               find_jumps_for_puzzle(p);
+	       Puzzle newp = *p;
+	       recurse(&newp);
+	    }
+         }
+	 print_triangle(*p);
+      }
+   }
+}
+
