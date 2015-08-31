@@ -66,7 +66,6 @@ void print_triangle(Puzzle p) {
    printf(" %d %d %d %d %d\n\n", p.triangle[4][0], p.triangle[4][1], 
 		                 p.triangle[4][2], p.triangle[4][3], 
 				 p.triangle[4][4]);
-   
    printf("Peg count is %d\n", p.peg_count);
    printf("Starting empty peg was %d\n", p.empty_peg);
    printf("Total possible jumps:  %d\n\n", p.all_possible_jumps);
@@ -95,6 +94,7 @@ int peg_count(Puzzle p) {
 void find_jumps_for_puzzle(Puzzle *p) {
 
    p->all_possible_jumps = 0;
+   p->peg_count = peg_count(*p);
    int count = 0;
    for(int row=0; row<SIZE; row++) {
       Jump j = find_jumps_for_peg(*p, row, row);
@@ -275,21 +275,22 @@ void make_jump(Puzzle *p, Jump *j, int position) {
 }
 
 void recurse(Puzzle *p) {
-	 
+ 
    for(Jump *jptr=&p->jumps[0]; jptr<&p->jumps[PEGS]; jptr++) {
       for(int i=0; i<JUMPSIZE; i++) {
          if(jptr->jump[i]==1) {
+	    p->peg_count = peg_count(*p);
 	    if(p->peg_count == 1) {
-	       printf("Solution Found!!!!!");
+	       printf("Solution Found!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 	       print_triangle(*p);
 	    } else {
                make_jump(p, jptr, i);
                find_jumps_for_puzzle(p);
 	       Puzzle newp = *p;
+	       printf("Peg Count: %d\n", peg_count(*p));
 	       recurse(&newp);
 	    }
          }
-	 print_triangle(*p);
       }
    }
 }
