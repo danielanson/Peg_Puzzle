@@ -1,3 +1,6 @@
+#ifndef _PEG_H_
+#define _PEG_H_
+
 /*
  * peg.h
  */
@@ -8,11 +11,9 @@
 //  represented as a partially filled 5X5 array.
 
 #define COORDINATES 2
-#define FALSE 0 
 #define JUMPSIZE 6
 #define PEGS 15
 #define SIZE 5
-#define TRUE 1
 
 /* DATA STRUCTURES */
 
@@ -134,3 +135,5 @@ void print_Jumps(Puzzle p);
 
 // the meat of the game, RECURSION!
 void recurse(Puzzle *p);
+
+#endif

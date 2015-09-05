@@ -1,5 +1,6 @@
-#include <peg.h>
 #include <stdio.h>
+#include <stdbool.h>
+#include "peg.h"
 
 /*
  * pegfunc.c
@@ -126,20 +127,20 @@ Jump find_jumps_for_peg(Puzzle p, int row, int col) {
       *ptr = 0;
    }
    j.possible_jumps = 0;
-   j.is_empty = FALSE;
+   j.is_empty = false;
 
    // The points of the triangle can never be jumped so instantly return
    // the empty Jump struct.  It can however be empty so check for that.
    if ((row==0 && col==0) || (row==4 && col==0) || (row==4 && col==4)) {
       if (p.triangle[row][col] == 0) {
-         j.is_empty = TRUE;
+         j.is_empty = true;
       }
       return j;
    }
 
    // If the [x,y] peg slot is empty, we can't make a jump so return.
    if (p.triangle[row][col] == 0) {
-      j.is_empty = TRUE;
+      j.is_empty = true;
       return j;
    }
    
@@ -235,7 +236,7 @@ void make_jump(Puzzle *p, Jump *j, int position) {
    // peg being jumped from j-xy[]
    int row=j->xy[0], col=j->xy[1];
    
-   if(j->is_empty==TRUE) {
+   if(j->is_empty==true) {
       return;
    }
 

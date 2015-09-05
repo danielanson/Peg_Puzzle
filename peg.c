@@ -1,6 +1,6 @@
-#include <peg.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "peg.h"
 
 
 int main() {
