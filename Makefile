@@ -1,13 +1,13 @@
 CC=gcc
 CFLAGS=-I.
 
-all: peg testpeg
+all: testpeg peg
 
-peg: peg.o pegfunc.o
-	$(CC) -o peg peg.o pegfunc.o $(CFLAGS)
+peg: peg.c pegfunc.c
+	$(CC) -o peg peg.c pegfunc.c
 
-testpeg: testpeg.o testpegfunc.o
-	$(CC) -o testpeg testpeg.o testpegfunc.o $(CFLAGS)
+testpeg: testpeg.c testpegfunc.c
+	$(CC) -o testpeg testpeg.c testpegfunc.c pegfunc.c
 
 clean:
 	rm -f peg testpeg peg.o pegfunc.o testpeg.o testpegfunc.o
