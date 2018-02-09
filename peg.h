@@ -6,9 +6,7 @@
  */
 
 //  Because the triangle goes from 1 peg at the top to 5 pegs at the bottom,
-//  the triangle can be represented as a 5 X 5 array.  It would be possible
-//  to represent the triangle as 5X9 or 9X9 array but it is easily 
-//  represented as a partially filled 5X5 array.
+//  the triangle can be represented as a 5 X 5 array.  
 
 #define COORDINATES 2
 #define JUMPSIZE 6
@@ -113,8 +111,8 @@ int peg_count(Puzzle p);
 // It will be using the methodology described above.  There will be three
 // possible answers:
 //
-// 1)  1:  A jump is possible
-// 2)  0:  A jump is not possible
+// 1)   1:  A jump is possible
+// 2)   0:  A jump is not possible
 // 3)  -1:  Out of Bounds
 Jump find_jumps_for_peg(Puzzle p, int row, int col);
 
@@ -130,10 +128,13 @@ void make_jump(Puzzle *p, Jump *j, int position);
 // Print a single jump struct
 void print_Jump(Jump j);
 
-// Prints a Puzzle's worth od Jump structs.
+// Prints a Puzzle's worth of Jump structs.
 void print_Jumps(Puzzle p);
 
 // the meat of the game, RECURSION!
-void recurse(Puzzle *p);
+int recurse(Puzzle *p);
+
+// Print the whole matrix
+void print_matrix(Puzzle p);
 
 #endif
