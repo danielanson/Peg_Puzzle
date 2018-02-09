@@ -5,6 +5,7 @@
 #include "peg.h"
 #include "testpeg.h"
 
+/* Unit test to test the function build_Puzzle */
 
 void test_build_Puzzle(void) {
 
