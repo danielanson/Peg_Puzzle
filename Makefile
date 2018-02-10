@@ -11,7 +11,11 @@ testpeg:
 	      test_find_jumps_for_puzzle.c test_print_Jump.c test_print_Jumps.c test_make_jump.c
 
 clean:
-	rm -f peg testpeg *.o
+	rm -f peg testpeg
 
 test: testpeg
 	./testpeg
+
+run: peg
+	./peg
+
